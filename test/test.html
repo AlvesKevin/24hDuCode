@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Liste des équipes</title>
+</head>
+<body>
+<h1>Liste des équipes</h1>
+<ul id="teams-list"></ul>
+
+<script>
+  // Options pour la requête GET à l'API REST
+  const options = {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJITlhWT3dMMVNwaXRINmh0Q052aVJPSjlrcjFSd05PM3NqckVqbTdlWUswIn0.eyJleHAiOjE2ODAzNjMwMDcsImlhdCI6MTY4MDM0MTQwNywiYXV0aF90aW1lIjoxNjgwMzQxMTc3LCJqdGkiOiJhNTdmYTc4ZS1hMTM4LTQ0NTgtOTM4NS01MjAyM2Y5ZTEzOTQiLCJpc3MiOiJodHRwOi8vMTg1Ljk4LjEzNi42MDo4MDgwL3JlYWxtcy9jb2RlbGVtYW5zIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6Ijk2NmI4MTFmLTU0YzYtNGVkNS1iMDE5LTE5YmNiY2UwNmQ4MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFwcC1kZWZpLTI0aCIsIm5vbmNlIjoiMmFiMjk3YzYtOGYwNS00YmQ4LTk0NWUtYTExZWRjOGJjYWNkIiwic2Vzc2lvbl9zdGF0ZSI6ImRkZGU4YzczLWY4MjUtNGNmOS04NGQ4LTgzZmZlZmJmMjMzZCIsImFjciI6IjAiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWNvZGVsZW1hbnMiLCJ1bWFfYXV0aG9yaXphdGlvbiIsInVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwic2lkIjoiZGRkZThjNzMtZjgyNS00Y2Y5LTg0ZDgtODNmZmVmYmYyMzNkIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInByZWZlcnJlZF91c2VybmFtZSI6ImltcG9ydGFudCIsInRlYW1faWQiOiIyMCIsImdpdmVuX25hbWUiOiIiLCJmYW1pbHlfbmFtZSI6IiIsInRlYW1fbmFtZSI6IiFJbXBvcnRhbnQifQ.oBVUdfeBU5IvV4KiOwq8WWvjAhWClBmZwNmuuY4L-l4Jg8_s9-SE_AZfuUCMTIxF9QazPC5x0pIAv2ilmM9Uu7bXHfk7CHigZEggYYDTRbjpAdeHgUp2KjG0kTpdrqcr-0Ph-G3uxBWM2ZvJh7N0-Z6LsdS2GdtDiyiJezaRNloefFLkkQjWUH9DEZBz9RuTnygA4THVgVSkCQefMwzPfXqdtAEVONSG8ew6Ecguunb_FIs0Bo1nyIa6XXqrHeVrbzAeWmzshmTST9CgL313EPSAOSg1kX5KE1FZO4MkoZQPJRP8t95CqtmfmdR797OYem5lcdsKTs55oaQdo01vMw',
+    },
+  };
+
+  // On récupère l'élément <ul> dans lequel on va afficher la liste des équipes
+  const teamsList = document.getElementById('teams-list');
+
+  // On envoie la requête à l'API REST pour récupérer les informations des équipes
+  fetch('http://185.98.136.60:9090/teams', options)
+          .then(response => response.json())
+          .then(teams => {
+            // Pour chaque équipe, on crée un élément <li> dans la liste <ul> avec son nom, son pays d'origine, son ID et son descriptif
+            teams.forEach(team => {
+              const teamItem = document.createElement('li');
+              teamItem.textContent = `${team.name} - ID: ${team.id}, score: ${team.score}, vehicleAcceleration: ${team.vehicle.acceleration}`;
+              teamsList.appendChild(teamItem);
+            });
+          })
+          .catch(err => console.error(err));
+</script>
+</body>
+</html>

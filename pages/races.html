@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <div class="navbar-aside">
-        <img id="logo-ekod" src="../img/EKOD-LOGO.svg" alt="ekod">
+        <img id="logo-ekod" src="../img/logoEkod.svg" alt="ekod">
         <ul>
             <li><img src="../img/dashboard.png"><a href="../pages/mon-equipe.html">MON EQUIPE</a></li>
             <li><img src="../img/speedometer.png"><a href="../pages/races.html">COURSES</a></li>
@@ -16,9 +16,58 @@
         </ul>
     </div>
     <div class="section">
-        <h2></h2>
-        <ul id="teams-list"></ul>
+        <h1>Liste des courses</h1>
+        <div id="Race-liste"></div>
     </div>
 </div>
+
+<script>
+    const URL_GRAPE_BASE = "http://185.98.136.60:9090/";
+    const URL_GRAPE_Image = "http://185.98.136.60/";
+
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            // Remplacer par votre clé d'autorisation
+            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJITlhWT3dMMVNwaXRINmh0Q052aVJPSjlrcjFSd05PM3NqckVqbTdlWUswIn0.eyJleHAiOjE2ODA0MjE0NzMsImlhdCI6MTY4MDM5OTk1MiwiYXV0aF90aW1lIjoxNjgwMzg1NDczLCJqdGkiOiJiZjcwYzA1OC02YzI3LTRmMzAtODI3MC1lMmVkMzRkMTJjMDQiLCJpc3MiOiJodHRwOi8vMTg1Ljk4LjEzNi42MDo4MDgwL3JlYWxtcy9jb2RlbGVtYW5zIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6Ijk2NmI4MTFmLTU0YzYtNGVkNS1iMDE5LTE5YmNiY2UwNmQ4MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFwcC1kZWZpLTI0aCIsIm5vbmNlIjoiMmFjODUxZGQtNTMwNS00MGY2LWJkYzItYjhmZWFkZGJjNjczIiwic2Vzc2lvbl9zdGF0ZSI6ImEyMGQzYzZlLWU2ZTQtNGE3Mi1iZWMxLTk0YTgwNDEzNTc1MyIsImFjciI6IjAiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWNvZGVsZW1hbnMiLCJ1bWFfYXV0aG9yaXphdGlvbiIsInVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwic2lkIjoiYTIwZDNjNmUtZTZlNC00YTcyLWJlYzEtOTRhODA0MTM1NzUzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInByZWZlcnJlZF91c2VybmFtZSI6ImltcG9ydGFudCIsInRlYW1faWQiOiIyMCIsImdpdmVuX25hbWUiOiIiLCJmYW1pbHlfbmFtZSI6IiIsInRlYW1fbmFtZSI6IiFJbXBvcnRhbnQifQ.SKRU7-KZeqPlqiLl3VWcBqHvGLTi5BHvFagQiPYxK5BbIiUkduqN-o2KsewpMTuxT1vdLp-aOS2VFUxan9ejohdK8irrjWiuUM3z0b62U6BirloPb3qVfiek7Tj6EmIRjsy25XipUwRqTYJmSNTfWpvvdYifBagXVMb4C4Tpc5Knj65PwnP0mXYsVbAzikTkKcQY8O9YFdLCax5rWgwQCo8QkKjVYGgSoBuOuR3UuSBqQsEG23YVoboq5fhIbA6CiMc0UkeLAv419R2lqpMGw09DejkBbOqlsF-IChapya_pep6JqAZdPZSe2BDa3QPKsWTTtEliLZOb5mPNRWuRxA'
+        }
+    };
+
+    function AfficheRace() {
+        fetch(`${URL_GRAPE_BASE}races/all/20`, options)
+            .then(response => response.json())
+            .then(data => {
+                const Raceliste = document.getElementById('Race-liste');
+                data.forEach(race => {
+                    const listRace = document.createElement('div');
+                    listRace.classList.add('race');
+                    let itemstack = "";
+                    for (let index = 0; index < race.medals.length; index++) {
+                        itemstack = itemstack + " type: " + race.medals[index].type + ", rewardCoins: " + race.medals[index].rewardCoins + ", rewardPoints " + race.medals[index].rewardPoints + ", timeToObtain: " + race.medals[index].timeToObtain;
+                    }
+                    const c = `${URL_GRAPE_Image}assets/races/${race.image}.svg`;
+                    listRace.innerHTML = `<img src="${c}"><div id="${race.id}" class="item-name">${race.name} - ID: ${race.id}<div>difficulté: ${race.difficulty}</div></div><div>${itemstack}</div><button class="start" onclick="startcourse(this)">Participer</button></div>`;
+                    Raceliste.appendChild(listRace);
+                });
+            });
+    }
+
+    function startcourse(nb) {
+        const c = nb.parentElement.children[1].id;
+        fetch(
+            `${URL_GRAPE_BASE}races/10/run/20`,
+            options
+        )
+            .then((response) => {
+                console.log(response);
+            })
+            .then(data => {
+                console.log("course effectuée");
+            });
+    }
+
+    AfficheRace();
+</script>
 </body>
 </html>
